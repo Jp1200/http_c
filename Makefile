@@ -1,11 +1,19 @@
-CC = clang
-CFLAGS = -Wall -Wextra -std=c11
+CC=gcc
+CFLAGS=-I.
+DEPS=
+OBJ=main.o
+USERID=123456789
 
-main: main.o
-	$(CC) $(CFLAGS) -o $@ $^
+%.o: %.c $(DEPS)
+	$(CC) -c -o $@ $< $(CFLAGS)
 
-main.o: main.c
-	$(CC) $(CFLAGS) -c $< -o $@
+all: main
+main: $(OBJ)
+	$(CC) -o $@ $^ $(CFLAGS)
 
 clean:
-	rm -f main *.olang -o -Wall main main.c
+	rm -rf *.o main *.tar.gz
+
+dist: tarball
+tarball: clean
+	tar -cvzf /tmp/$(USERID).tar.gz --exclude=./.vagrant . && mv /tmp/$(USERID).tar.gz .
